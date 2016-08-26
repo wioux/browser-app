@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="react.js"></script>
+  <script type="text/javascript" src="browser-app.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+
+  <script type="text/babel">
+    window.onload = function() {
+      var results = [
+            { id: 1,   html: "item 1",  url: "viewport.html" },
+            { id: 2,   html: "item 2",  url: "viewport.html" },
+            { id: 3,   html: "item 3",  url: "viewport.html" },
+            { id: 4,   html: "item 4",  url: "viewport.html" },
+            { id: 5,   html: "item 5",  url: "viewport.html" },
+            { id: 6,   html: "item 6",  url: "viewport.html" },
+            { id: 7,   html: "item 7",  url: "viewport.html" },
+            { id: 8,   html: "item 8",  url: "viewport.html" },
+            { id: 9,   html: "item 9",  url: "viewport.html" },
+            { id: 10,  html: "item 10", url: "viewport.html" }
+      ];
+
+      ReactDOM.render(
+        <BrowserApp searchPath="/search.json" searchPlaceholder="Search for stuff">
+          <h2>This area is the "viewport"</h2>
+          <p>Initial content goes here.</p>
+        
+          <div className="browser-app-actions">
+            <div className="browser-app-action">
+              <a href="#"><i className="fa fa-save" /></a>
+            </div>
+        
+            <div className="browser-app-action">
+              <a href="#"><i className="fa fa-remove" /></a>
+            </div>
+        
+            <hr />
+        
+            <div className="browser-app-action">
+              <a href="#"><i className="fa fa-home" /></a>
+            </div>
+          </div>
+        </BrowserApp>
+      , document.getElementById("app")).
+        setState({ results: results, selectedResult: 3 });
+    };
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="browser-app.css" />
+  <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.6.3/font-awesome.min.css" integrity="sha384-Wrgq82RsEean5tP3NK3zWAemiNEXofJsTwTyHmNb/iL3dP/sZJ4+7sOld1uqYJtE" crossorigin="anonymous">
+
+  <style type="text/css">
+    .browser-app-viewport h2 {
+      margin-top: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+</html>
