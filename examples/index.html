@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="react.js"></script>
+  <script type="text/javascript" src="browser-app.js"></script>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var app = React.createElement(BrowserApp, {
+        searchPath: "/search.json",
+        searchPlaceholder: "Search for stuff"
+      });
+
+      var results = [
+            { id: 1,   html: "item 1",  url: "viewport.html" },
+            { id: 2,   html: "item 2",  url: "viewport.html" },
+            { id: 3,   html: "item 3",  url: "viewport.html" },
+            { id: 4,   html: "item 4",  url: "viewport.html" },
+            { id: 5,   html: "item 5",  url: "viewport.html" },
+            { id: 6,   html: "item 6",  url: "viewport.html" },
+            { id: 7,   html: "item 7",  url: "viewport.html" },
+            { id: 8,   html: "item 8",  url: "viewport.html" },
+            { id: 9,   html: "item 9",  url: "viewport.html" },
+            { id: 10,  html: "item 10", url: "viewport.html" },
+            { id: 11,  html: "item 11", url: "viewport.html" },
+            { id: 12,  html: "item 12", url: "viewport.html" },
+            { id: 13,  html: "item 13", url: "viewport.html" },
+            { id: 14,  html: "item 14", url: "viewport.html" },
+            { id: 15,  html: "item 15", url: "viewport.html" },
+            { id: 16,  html: "item 16", url: "viewport.html" },
+            { id: 17,  html: "item 17", url: "viewport.html" },
+            { id: 18,  html: "item 18", url: "viewport.html" },
+            { id: 19,  html: "item 19", url: "viewport.html" },
+            { id: 20,  html: "item 20", url: "viewport.html" }
+      ];
+
+      var selectedResult = 3;
+
+      var viewportHTML = "<p>a paragraph</p>";
+      for (var i=0; i < 30; ++i)
+        viewportHTML += "<p>and another paragraph</p>";
+
+      viewportHTML += document.getElementById("actions").innerHTML;
+
+      ReactDOM.render(app, document.getElementById("app"))
+        .setState({ results: results,
+                    selectedResult: selectedResult,
+                    viewportHTML: viewportHTML });
+
+      $(".tuning-forks a").click(function(e) {
+        e.preventDefault();
+
+        $(".tuning-forks .panel").toggle();
+      });
+    };
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="browser-app.css" />
+  <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.6.3/font-awesome.min.css" integrity="sha384-Wrgq82RsEean5tP3NK3zWAemiNEXofJsTwTyHmNb/iL3dP/sZJ4+7sOld1uqYJtE" crossorigin="anonymous">
+
+  <style type="text/css">
+    .tuning-forks .panel {
+      position: absolute;
+      top: 0px;
+      right: 44px;
+
+      display: none;
+    }
+
+    .tuning-forks .panel.deployed {
+      display: block;
+    }
+
+    .tuning-forks .panel button {
+      width: 60px;
+      font-size: 40px;
+      text-decoration: none;
+      color: #bbb;
+    }
+
+    .tuning-forks .panel button:hover {
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" style="height: 100%"></div>
+
+  <div id="actions" style="display:none">
+    <div class="browser-app-actions">
+      <div class="browser-app-action">
+        <form action="#" method="post">
+          <button title="Start Practicing"
+                  type="submit"><i class="fa fa-plus"></i></button>
+        </form>
+      </div>
+
+      <div class="browser-app-action">
+        <a href="#" title="Record"><i class="fa fa-microphone"></i></a>
+      </div>
+
+      <div class="browser-app-action">
+        <a href="#" title="Note"><i class="fa fa-pencil"></i></a>
+      </div>
+
+      <hr />
+
+      <div class="browser-app-action">
+        <a href="#" title="Home"><i class="fa fa-home"></i></a>
+      </div>
+
+      <hr />
+
+      <div class="browser-app-action">
+        <a href="#" title="Home"><i class="fa fa-home"></i></a>
+      </div>
+
+      <div class="browser-app-action tuning-forks">
+        <div class="panel">
+          <button class="fork">G</button>
+          <button class="fork">D</button>
+          <button class="fork">A</button>
+          <button class="fork">E</button>
+        </div>
+
+        <a href="#" title="Show Tuning Forks">⑂</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

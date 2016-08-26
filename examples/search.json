@@ -1,0 +1,7 @@
+{
+  "results": [
+    { "id": 101,   "html": "result 101",  "url": "viewport.html" },
+    { "id": 102,   "html": "result 102",  "url": "viewport.html" },
+    { "id": 103,   "html": "result 103",  "url": "viewport.html" }
+  ]
+}

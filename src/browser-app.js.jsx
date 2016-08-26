@@ -1,0 +1,162 @@
+
+exports.BrowserApp = React.createClass({
+  propTypes: {
+    searchPath: React.PropTypes.string.isRequired,
+    searchPlaceholder:  React.PropTypes.string,
+
+    // Called after filter search/refresh
+    onFilter: React.PropTypes.func,
+
+    // Called after a filter result is selected
+    onSelect: React.PropTypes.func,
+
+    // Called after content is loaded into the viewport
+    onLoad:   React.PropTypes.func
+  },
+
+  getDefaultProps: function() {
+    return {
+      onFilter: function() {},
+      onSelect: function() {},
+      onLoad: function() {}
+    }
+  },
+
+  getInitialState: function() {
+    return {
+      filter: "",
+
+      // filter results
+      results: [],
+
+      // .id of selected filter result
+      selectedResult: null,
+
+      // url of the content displayed in the viewport
+      viewPortUrl: null,
+
+      // content displayed in the viewport
+      viewportHTML: this.props.__html || this.props.children || ""
+    };
+  },
+
+  componentDidMount: function() {
+    this.refs.ui.parentNode.style.height = "100%";
+  },
+
+  filter: function(f, callback) {
+    var self = this;
+
+    $.ajax({
+      dataType: "json",
+      data: { f: f },
+      url: this.props.searchPath,
+
+      success: function(resp) {
+        self.setState({ filter: f, results: resp.results }, function() {
+          callback && callback.call(self);
+        });
+      },
+
+      error: function() {
+        console.log("error!");
+        console.log(arguments);
+      }
+    });
+  },
+
+  refreshFilter: function(e) {
+    e && e.preventDefault();
+    this.filter(this.state.filter, this.props.onFilter);
+  },
+
+  clearFilter: function(e) {
+    e && e.preventDefault();
+
+    var self = this;
+    this.filter("", function() {
+      self.props.onFilter();
+      self.refs.filter.focus();
+      self.refs.filter.select();
+    });
+  },
+
+  setViewport: function(url, id, signal, callback) {
+    var self = this;
+    $.get(url, function(html) {
+      self.setState({
+        selectedResult: id,
+        viewportUrl: url,
+        viewportHTML: html
+      });
+
+      if (signal !== false)
+        self.props["onLoad"](url.split("?", 2)[0]);
+
+      callback && callback();
+    });
+
+  },
+
+
+  onFilterInputChange: function(e) {
+    this.setState({ filter: e.target.value });
+  },
+
+  onSelectResult: function(id, url, e) {
+    if (url) {
+      e && e.preventDefault();
+      this.setViewport(url, id, true, this.props.onSelect);
+    }
+  },
+
+  render: function() {
+    var self = this;
+    var results = this.state.results.map(function(result) {
+      return (
+        <li key={ result.id }
+            className={ result.id == self.state.selectedResult ? "browser-app-selected" : "" }
+            onClick={ self.onSelectResult.bind(self, result.id, result.url) }
+            dangerouslySetInnerHTML={ { __html: result.html } }></li>
+      );
+    });
+
+
+    if (results.length)
+      results.push(<li key="-1" style={{textAlign: "center"}}>No more results</li>);
+    else
+      results.push(<li key="-1" style={{textAlign: "center"}}>No results</li>);
+
+    var content = typeof this.state.viewportHTML == "string" ?
+                    <div className="browser-app-viewport-content"
+                         dangerouslySetInnerHTML={{__html: this.state.viewportHTML }} />
+                  : <div className="browser-app-viewport-content">
+                      { this.state.viewportHTML }
+                    </div>;
+
+    return (
+      <div ref="ui" className="browser-app">
+        <div className="browser-app-filter">
+          <form action={ this.props.searchPath } onSubmit={ this.refreshFilter }>
+            <div className="browser-app-filter-container">
+              <span className="browser-app-filter-clear" onClick={this.clearFilter}>
+                <a href="#"><i className="fa fa-ban"></i></a>
+              </span>
+              
+              <input ref="filter" type="search" name="f" autoComplete="off"
+                     placeholder={ this.props.searchPlaceholder } value={this.state.filter} onChange={this.onFilterInputChange} />
+            </div>
+          </form>
+
+          <ul className="browser-app-results">
+            { results }
+          </ul>
+        </div>
+
+        <div className="browser-app-viewport">
+          { content }
+        </div>
+      </div>
+    );
+  }
+});
