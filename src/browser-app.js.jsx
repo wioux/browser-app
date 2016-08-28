@@ -2,7 +2,14 @@
 exports.BrowserApp = React.createClass({
   propTypes: {
     searchPath: React.PropTypes.string.isRequired,
-    searchPlaceholder:  React.PropTypes.string,
+    searchPlaceholder: React.PropTypes.string,
+
+    initialFilter: React.PropTypes.string,
+    initialResults: React.PropTypes.array,
+    initialSelectedResult: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number
+    ]),
 
     // Called after filter search/refresh
     onFilter: React.PropTypes.func,
@@ -24,13 +31,13 @@ exports.BrowserApp = React.createClass({
 
   getInitialState: function() {
     return {
-      filter: "",
+      filter: this.props.initialFilter || "",
 
       // filter results
-      results: [],
+      results: this.props.initialResults || [],
 
       // .id of selected filter result
-      selectedResult: null,
+      selectedResult: this.props.initialSelectedResult || null,
 
       // url of the content displayed in the viewport
       viewPortUrl: null,
