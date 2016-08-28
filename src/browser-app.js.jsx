@@ -4,6 +4,12 @@ exports.BrowserApp = React.createClass({
     searchPath: React.PropTypes.string.isRequired,
     searchPlaceholder: React.PropTypes.string,
 
+    // Tag to wrap filter results with
+    resultTag: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.func
+    ]),
+
     initialFilter: React.PropTypes.string,
     initialResults: React.PropTypes.array,
     initialSelectedResult: React.PropTypes.oneOfType([
@@ -119,13 +125,29 @@ exports.BrowserApp = React.createClass({
 
   render: function() {
     var self = this;
+
+    var resultTag = this.props.resultTag;
+    if (typeof resultTag == "string")
+      resultTag = window[resultTag];
+
     var results = this.state.results.map(function(result) {
-      return (
-        <li key={ result.id }
-            className={ result.id == self.state.selectedResult ? "browser-app-selected" : "" }
-            onClick={ self.onSelectResult.bind(self, result.id, result.url) }
-            dangerouslySetInnerHTML={ { __html: result.html } }></li>
-      );
+      if (resultTag) {
+        var e = React.createElement(resultTag, result);
+        return (
+          <li key={ result.id }
+              className={ result.id == self.state.selectedResult ? "browser-app-selected" : "" }
+              onClick={ self.onSelectResult.bind(self, result.id, result.url) }>
+            { e }
+          </li>
+        );
+      } else if (result.html) {
+        return (
+          <li key={ result.id }
+              className={ result.id == self.state.selectedResult ? "browser-app-selected" : "" }
+              onClick={ self.onSelectResult.bind(self, result.id, result.url) }
+              dangerouslySetInnerHTML={ { __html: result.html } }></li>
+        );
+      }
     });
 
 
