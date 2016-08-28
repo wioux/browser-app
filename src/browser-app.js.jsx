@@ -108,7 +108,6 @@ exports.BrowserApp = React.createClass({
 
       callback && callback();
     });
-
   },
 
 
@@ -171,7 +170,7 @@ exports.BrowserApp = React.createClass({
         <div className="browser-app-filter">
           <form action={ this.props.searchPath } onSubmit={ this.refreshFilter }>
             <div className="browser-app-filter-container">
-              <span className="browser-app-filter-clear" onClick={this.clearFilter}>
+              <span className="browser-app-filter-clear" onClick={ this.clearFilter }>
                 <a href="#"><i className="fa fa-ban"></i></a>
               </span>
               
