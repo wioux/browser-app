@@ -21,7 +21,13 @@ html, body {
 }
 
 .browser-app-viewport {
-  flex: 1 0 auto;
+  flex: 1 0;
+  padding-right: 40px; /* leave room for actions */
+}
+
+.browser-app-viewport-content {
+  position: relative;
+  height: 100%;
 }
 
 /* Filter box layout */

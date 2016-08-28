@@ -11,6 +11,13 @@ exports.BrowserApp = React.createClass({
     searchPath: React.PropTypes.string.isRequired,
     searchPlaceholder: React.PropTypes.string,
 
+    // Tag to wrap filter results with
+    resultTag: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
+
+    initialFilter: React.PropTypes.string,
+    initialResults: React.PropTypes.array,
+    initialSelectedResult: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+
     // Called after filter search/refresh
     onFilter: React.PropTypes.func,
 
@@ -18,7 +25,10 @@ exports.BrowserApp = React.createClass({
     onSelect: React.PropTypes.func,
 
     // Called after content is loaded into the viewport
-    onLoad: React.PropTypes.func
+    onLoad: React.PropTypes.func,
+
+    // Called before content is unloaded from the viewport
+    onUnload: React.PropTypes.func
   },
 
   getDefaultProps: function () {
@@ -31,13 +41,13 @@ exports.BrowserApp = React.createClass({
 
   getInitialState: function () {
     return {
-      filter: "",
+      filter: this.props.initialFilter || "",
 
       // filter results
-      results: [],
+      results: this.props.initialResults || [],
 
       // .id of selected filter result
-      selectedResult: null,
+      selectedResult: this.props.initialSelectedResult || null,
 
       // url of the content displayed in the viewport
       viewPortUrl: null,
@@ -61,7 +71,8 @@ exports.BrowserApp = React.createClass({
 
       success: function (resp) {
         self.setState({ filter: f, results: resp.results }, function () {
-          callback && callback.call(self);
+          self.props.onFilter(resp);
+          callback && callback(resp);
         });
       },
 
@@ -74,7 +85,7 @@ exports.BrowserApp = React.createClass({
 
   refreshFilter: function (e) {
     e && e.preventDefault();
-    this.filter(this.state.filter, this.props.onFilter);
+    this.filter(this.state.filter);
   },
 
   clearFilter: function (e) {
@@ -82,7 +93,6 @@ exports.BrowserApp = React.createClass({
 
     var self = this;
     this.filter("", function () {
-      self.props.onFilter();
       self.refs.filter.focus();
       self.refs.filter.select();
     });
@@ -108,19 +118,37 @@ exports.BrowserApp = React.createClass({
   },
 
   onSelectResult: function (id, url, e) {
-    if (url) {
-      e && e.preventDefault();
+    if (url && !$(e.target).is("a,button,input,textarea")) {
+      e.preventDefault();
+      this.setViewport(url, id, true, this.props.onSelect);
+    } else if (url && e.target.nodeName == "A" && e.target.attributes.href.value == url) {
+      e.preventDefault();
       this.setViewport(url, id, true, this.props.onSelect);
     }
   },
 
   render: function () {
     var self = this;
+
+    var resultTag = this.props.resultTag;
+    if (typeof resultTag == "string") resultTag = window[resultTag];
+
     var results = this.state.results.map(function (result) {
-      return React.createElement("li", { key: result.id,
-        className: result.id == self.state.selectedResult ? "browser-app-selected" : "",
-        onClick: self.onSelectResult.bind(self, result.id, result.url),
-        dangerouslySetInnerHTML: { __html: result.html } });
+      if (resultTag) {
+        var e = React.createElement(resultTag, result);
+        return React.createElement(
+          "li",
+          { key: result.id,
+            className: result.id == self.state.selectedResult ? "browser-app-selected" : "",
+            onClick: self.onSelectResult.bind(self, result.id, result.url) },
+          e
+        );
+      } else if (result.html) {
+        return React.createElement("li", { key: result.id,
+          className: result.id == self.state.selectedResult ? "browser-app-selected" : "",
+          onClick: self.onSelectResult.bind(self, result.id, result.url),
+          dangerouslySetInnerHTML: { __html: result.html } });
+      }
     });
 
     if (results.length) results.push(React.createElement(

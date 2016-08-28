@@ -8,10 +8,16 @@
   <script type="text/javascript" src="browser-app.js"></script>
 
   <script type="text/javascript">
+    window.FilterResult = function(props) {
+      return React.createElement("i", {}, props.html);
+    };
+
     window.onload = function() {
       var app = React.createElement(BrowserApp, {
         searchPath: "/search.json",
-        searchPlaceholder: "Search for stuff"
+        searchPlaceholder: "Search for stuff",
+
+        resultTag: "FilterResult",
       });
 
       var results = [
@@ -41,7 +47,7 @@
 
       var viewportHTML = "<p>a paragraph</p>";
       for (var i=0; i < 30; ++i)
-        viewportHTML += "<p>and another paragraph</p>";
+        viewportHTML += "<p>and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph</p>";
 
       viewportHTML += document.getElementById("actions").innerHTML;
 
