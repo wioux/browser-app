@@ -67,7 +67,8 @@ exports.BrowserApp = React.createClass({
 
       success: function(resp) {
         self.setState({ filter: f, results: resp.results }, function() {
-          callback && callback.call(self);
+          self.props.onFilter(resp);
+          callback && callback(resp);
         });
       },
 
@@ -80,7 +81,7 @@ exports.BrowserApp = React.createClass({
 
   refreshFilter: function(e) {
     e && e.preventDefault();
-    this.filter(this.state.filter, this.props.onFilter);
+    this.filter(this.state.filter);
   },
 
   clearFilter: function(e) {
@@ -88,7 +89,6 @@ exports.BrowserApp = React.createClass({
 
     var self = this;
     this.filter("", function() {
-      self.props.onFilter();
       self.refs.filter.focus();
       self.refs.filter.select();
     });
