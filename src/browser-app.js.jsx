@@ -117,8 +117,11 @@ exports.BrowserApp = React.createClass({
   },
 
   onSelectResult: function(id, url, e) {
-    if (url) {
-      e && e.preventDefault();
+    if (url && !$(e.target).is("a,button,input,textarea")) {
+      e.preventDefault();
+      this.setViewport(url, id, true, this.props.onSelect);
+    } else if (url && e.target.nodeName == "A" && e.target.attributes.href.value == url) {
+      e.preventDefault();
       this.setViewport(url, id, true, this.props.onSelect);
     }
   },
