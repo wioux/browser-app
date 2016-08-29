@@ -44,12 +44,7 @@
       ];
 
       var selectedResult = 3;
-
-      var viewportHTML = "<p>a paragraph</p>";
-      for (var i=0; i < 30; ++i)
-        viewportHTML += "<p>and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph and another paragraph</p>";
-
-      viewportHTML += document.getElementById("actions").innerHTML;
+      var viewportHTML = document.getElementById("viewport").innerHTML;
 
       ReactDOM.render(app, document.getElementById("app"))
         .setState({ results: results,
@@ -96,7 +91,37 @@
 <body>
   <div id="app" style="height: 100%"></div>
 
-  <div id="actions" style="display:none">
+  <div id="viewport" style="display:none">
+<h1 style="margin-top: 0">Top level heading</h1>
+<h2>Second level heading</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tristique consequat vulputate. Nullam ultrices ultrices enim rutrum sagittis. Praesent semper lacus tincidunt nibh pellentesque, posuere imperdiet tellus fermentum. Quisque eget purus vitae neque consequat blandit at sit amet urna. Praesent vulputate augue ut imperdiet iaculis. Nulla quis sem malesuada, rhoncus libero quis, suscipit nulla. Morbi orci nulla, eleifend ut dignissim ut, vehicula non erat. Sed faucibus, velit eu faucibus sodales, velit erat finibus augue, vitae vestibulum ipsum magna vel massa.</p>
+
+<p>Donec eu nulla in mauris luctus faucibus. Donec risus odio, feugiat a viverra non, hendrerit nec mi. Nulla tempor neque ut venenatis placerat. Pellentesque vulputate elit a urna pellentesque, vitae egestas nibh rhoncus. Pellentesque ut iaculis purus, quis pellentesque mauris. Aliquam non cursus ex, ultrices semper lorem. Nam ac odio in neque lacinia posuere eu at enim. Aenean lobortis arcu nec rhoncus viverra. Curabitur eros neque, euismod commodo rhoncus et, volutpat sit amet erat. Praesent placerat vehicula ipsum, et dictum nisl accumsan ut. Sed ut ex sed ipsum accumsan lacinia non id enim. Etiam lectus nibh, sodales non interdum non, tincidunt non eros. Cras eget elementum nibh, sit amet dignissim felis. Duis vel fermentum sapien, ac hendrerit magna. In suscipit lobortis augue, eu tempus odio ullamcorper non.</p>
+
+<h2>Second level heading</h2>
+<p>Praesent lobortis urna sit amet posuere blandit. Donec sagittis erat purus, non semper est ornare at. Suspendisse vulputate magna mi, ac dignissim erat interdum nec. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec ut scelerisque ex. Fusce suscipit quam sit amet augue fringilla, ac elementum urna lacinia. Cras laoreet odio vitae odio ornare egestas. Donec elementum velit eget tortor feugiat, id tempor ipsum rutrum. Fusce semper, purus non placerat egestas, odio purus interdum velit, quis tincidunt turpis erat nec dolor. Vivamus et eros nunc. Cras semper eleifend mi, ac sagittis magna laoreet vitae. Curabitur tortor dui, finibus vel odio ac, varius lobortis ligula.</p>
+
+<p>Duis eget scelerisque nunc. Morbi malesuada tempor pharetra. Nam pulvinar tincidunt nulla, imperdiet blandit mi ornare eget. Fusce vitae tortor in nisl dapibus maximus. Curabitur blandit augue sit amet nisl pharetra sagittis. In et libero lorem. Fusce id tellus at ante tincidunt tincidunt eget congue odio. Donec molestie pretium suscipit. Nulla eu placerat lorem.</p>
+
+<h3>Third level heading</h3>
+<p>Nunc eget elit sapien. Donec eros massa, posuere eget lobortis nec, vestibulum eu sem. Vestibulum enim lorem, accumsan pharetra fermentum ut, iaculis rutrum eros. Etiam interdum nisl non erat consequat placerat. Etiam pellentesque tempus finibus. Sed vel ultrices magna, vitae venenatis augue. Sed blandit elit at odio lobortis molestie. Aenean mollis, neque nec vestibulum malesuada, est ipsum pellentesque eros, et suscipit elit justo sit amet nibh. Quisque eu pulvinar felis. Nulla maximus, lacus vel dignissim imperdiet, lacus augue venenatis risus, sed laoreet risus purus id nisi. Nam quis ligula sit amet libero ultrices laoreet eu in augue.</p>
+
+<p>Morbi in egestas justo. Fusce eu dictum ipsum. Duis luctus, purus vel fermentum fermentum, sem lacus pellentesque justo, non finibus leo tortor in odio. Proin efficitur a purus id interdum. Phasellus id urna eu magna tristique mollis ac non nibh. In hendrerit elit at ex efficitur bibendum. Integer interdum eros at purus scelerisque scelerisque. Nulla ut enim ac dolor facilisis eleifend ut semper dui. Aenean faucibus nulla vel libero bibendum aliquet.</p>
+
+<p>Donec ultricies tellus elit, et pretium sapien hendrerit sit amet. Suspendisse sit amet tortor ac nibh sodales imperdiet. Etiam ac nunc tempor nisl ultricies convallis. Pellentesque mollis tellus at mi gravida accumsan. Sed at leo vel eros placerat luctus ac nec augue. Sed blandit diam non odio vehicula ullamcorper. Aliquam erat volutpat. Duis malesuada molestie sem sed bibendum. Phasellus sit amet tempus mauris. Duis quis egestas nisl.</p>
+
+<h3>Third level heading</h3>
+<h4>Fourth level heading</h4>
+<p>Phasellus eu dui turpis. Curabitur a ipsum diam. Nam vel nulla sit amet elit ultricies congue sed nec tortor. Sed rhoncus nibh est, nec faucibus felis finibus sit amet. Aenean porta mollis commodo. In et ipsum quam. Sed placerat sollicitudin nunc at accumsan. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis elementum dui lacus, a euismod nisi luctus mattis.</p>
+
+<p>Duis ac velit nec lectus ullamcorper ullamcorper. Sed auctor pulvinar massa, a maximus massa rhoncus sed. Proin tristique vitae turpis non vestibulum. Quisque lobortis bibendum nunc ac sodales. Suspendisse efficitur elit a semper luctus. Proin suscipit sed justo at volutpat. Duis efficitur tellus non consequat aliquam. Morbi at blandit ante. Vivamus molestie et est eu efficitur. Sed in dui sem. Morbi a commodo mi. Proin ornare sapien non nulla volutpat fermentum. Mauris feugiat, neque vitae ornare mollis, tortor enim vestibulum est, nec rhoncus nibh metus vitae magna. Etiam a lectus et erat commodo semper ac non nibh.</p>
+
+<h4>Fourth level heading</h4>
+<p>Nam turpis lorem, commodo eget turpis vel, vestibulum rhoncus massa. Morbi at semper purus. Donec semper euismod ex, sit amet mattis ipsum mollis at. Duis nec dui ullamcorper, condimentum ex sed, aliquet orci. Nam suscipit ornare nulla ac aliquam. Curabitur a laoreet elit. Duis vulputate sit amet dolor vitae dictum. Sed ut aliquam ligula. Morbi maximus leo vitae tellus sodales euismod. Aliquam ex dui, aliquam ac mauris sed, semper pulvinar lorem.</p>
+
+<br /><br />
+
+
     <div class="browser-app-actions">
       <div class="browser-app-action">
         <form action="#" method="post">

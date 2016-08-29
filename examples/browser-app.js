@@ -35,7 +35,8 @@ exports.BrowserApp = React.createClass({
     return {
       onFilter: function () {},
       onSelect: function () {},
-      onLoad: function () {}
+      onLoad: function () {},
+      onUnload: function () {}
     };
   },
 
@@ -99,6 +100,8 @@ exports.BrowserApp = React.createClass({
   },
 
   setViewport: function (url, id, signal, callback) {
+    if (this.props.onUnload() === false) return false;
+
     var self = this;
     $.get(url, function (html) {
       self.setState({
@@ -111,6 +114,8 @@ exports.BrowserApp = React.createClass({
 
       callback && callback();
     });
+
+    return true;
   },
 
   onFilterInputChange: function (e) {
