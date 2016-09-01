@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
   <script type="text/javascript" src="react.js"></script>
   <script type="text/javascript" src="browser-app.js"></script>
 
@@ -16,7 +15,7 @@
       var app = React.createElement(BrowserApp, {
         searchPath: "/search.json",
         searchPlaceholder: "Search for stuff",
-
+        initialSelectedResult: 3,
         resultTag: "FilterResult",
       });
 
@@ -43,19 +42,21 @@
             { id: 20,  html: "item 20", url: "viewport.html" }
       ];
 
-      var selectedResult = 3;
       var viewportHTML = document.getElementById("viewport").innerHTML;
 
       ReactDOM.render(app, document.getElementById("app"))
         .setState({ results: results,
-                    selectedResult: selectedResult,
                     viewportHTML: viewportHTML });
 
-      $(".tuning-forks a").click(function(e) {
-        e.preventDefault();
+      window.onclick = function(e) {
+        var a = e.target;
+        if (a.nodeName == "A" && a.parentNode.classList.contains("tuning-forks")) {
+          e.preventDefault();
 
-        $(".tuning-forks .panel").toggle();
-      });
+          var panel = document.querySelector(".tuning-forks .panel");
+          panel.style.display = panel.style.display == "none" ? "block" : "none";
+        }
+      };
     };
   </script>
 

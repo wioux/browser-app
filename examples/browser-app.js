@@ -3,6 +3,15 @@
 window.BrowserApp = require("./src/browser-app.js.jsx").BrowserApp;
 
 },{"./src/browser-app.js.jsx":2}],2:[function(require,module,exports){
+/*
+Copyright (c) 2016 Peter Woo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 exports.BrowserApp = React.createClass({
   displayName: "BrowserApp",
@@ -60,27 +69,58 @@ exports.BrowserApp = React.createClass({
 
   componentDidMount: function () {
     this.refs.ui.parentNode.style.height = "100%";
+
+    window.onpopstate = this.popHistory;
+  },
+
+  ajax: function (url, data, callback) {
+    var self = this;
+
+    var pairs = [],
+        keys = Object.keys(data);
+    for (var i = 0; i < keys.length; ++i) pairs.push(encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]));
+
+    if (pairs.length) {
+      url += url.match(/\?./) ? "&" : url.match(/\?/) ? "" : "?";
+      url += pairs.join("&");
+    }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState == 4 && xhttp.status == 200) callback.call(self, xhttp.responseText);
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
+  },
+
+  pushHistory: function (url) {
+    url = url || location.pathname;
+    if (this.state.filter.match(/\S/)) {
+      url += url.match(/\?./) ? "&" : url.match(/\?/) ? "" : "?";
+      url += "f=" + encodeURIComponent(this.state.filter);
+    }
+
+    window.history.pushState({
+      filter: this.state.filter || "",
+      selectedResult: this.state.selectedResult
+    }, '', url);
+  },
+
+  popHistory: function (e) {
+    if (e.state && e.state.filter != this.state.filter) this.filter(e.state.filter);
+
+    this.setViewport(location.href, e.state ? e.state.selectedResult : this.props.initialSelectedResult, false);
   },
 
   filter: function (f, callback) {
     var self = this;
-
-    $.ajax({
-      dataType: "json",
-      data: { f: f },
-      url: this.props.searchPath,
-
-      success: function (resp) {
-        self.setState({ filter: f, results: resp.results }, function () {
-          self.props.onFilter(resp);
-          callback && callback(resp);
-        });
-      },
-
-      error: function () {
-        console.log("error!");
-        console.log(arguments);
-      }
+    this.ajax(this.props.searchPath, { f: f }, function (resp) {
+      resp = JSON.parse(resp);
+      self.setState({ filter: f, results: resp.results }, function () {
+        self.pushHistory();
+        self.props.onFilter(resp);
+        callback && callback(resp);
+      });
     });
   },
 
@@ -99,18 +139,18 @@ exports.BrowserApp = React.createClass({
     });
   },
 
-  setViewport: function (url, id, signal, callback) {
+  setViewport: function (url, id, save, callback) {
     if (this.props.onUnload() === false) return false;
 
     var self = this;
-    $.get(url, function (html) {
+    this.ajax(url, {}, function (html) {
       self.setState({
         selectedResult: id,
         viewportUrl: url,
         viewportHTML: html
       });
 
-      if (signal !== false) self.props["onLoad"](url.split("?", 2)[0]);
+      if (save !== false) this.pushHistory(url);
 
       callback && callback();
     });
@@ -123,7 +163,7 @@ exports.BrowserApp = React.createClass({
   },
 
   onSelectResult: function (id, url, e) {
-    if (url && !$(e.target).is("a,button,input,textarea")) {
+    if (url && ["A", "BUTTON", "INPUT", "TEXTAREA"].indexOf(e.target.nodeName) == -1) {
       e.preventDefault();
       this.setViewport(url, id, true, this.props.onSelect);
     } else if (url && e.target.nodeName == "A" && e.target.attributes.href.value == url) {
@@ -139,18 +179,19 @@ exports.BrowserApp = React.createClass({
     if (typeof resultTag == "string") resultTag = window[resultTag];
 
     var results = this.state.results.map(function (result) {
+      var selected = self.state.selectedResult !== null && result.id == self.state.selectedResult;
       if (resultTag) {
         var e = React.createElement(resultTag, result);
         return React.createElement(
           "li",
           { key: result.id,
-            className: result.id == self.state.selectedResult ? "browser-app-selected" : "",
+            className: selected ? "browser-app-selected" : "",
             onClick: self.onSelectResult.bind(self, result.id, result.url) },
           e
         );
       } else if (result.html) {
         return React.createElement("li", { key: result.id,
-          className: result.id == self.state.selectedResult ? "browser-app-selected" : "",
+          className: selected ? "browser-app-selected" : "",
           onClick: self.onSelectResult.bind(self, result.id, result.url),
           dangerouslySetInnerHTML: { __html: result.html } });
       }
